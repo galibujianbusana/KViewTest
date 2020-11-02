@@ -6,6 +6,9 @@ import android.graphics.RenderNode;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.EditText;
+
+import com.example.kview.demo.ViewHelper;
 
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
@@ -35,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         initView();
         initData();
         loadData();
+        EditText edit = findViewById(R.id.edit);
+        ViewHelper.setPricePointWithInteger(edit, 4, 10);
+
 
     }
 
