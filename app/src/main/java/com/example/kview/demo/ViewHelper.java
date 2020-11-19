@@ -27,5 +27,16 @@ public class ViewHelper {
     }
 
 
+    public static void setPricePointWithInteger2(final EditText editText,  InputFilter... inputFilters) {
+
+            InputFilter[] newInputFilters = new InputFilter[inputFilters.length + 1];
+            System.arraycopy(inputFilters, 0, newInputFilters, 0, inputFilters.length);
+            newInputFilters[inputFilters.length] = new InputNumLengthFilter2();
+            editText.setFilters(newInputFilters);
+
+
+    }
+
+
 
 }

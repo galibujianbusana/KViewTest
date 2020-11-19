@@ -35,6 +35,11 @@ import trade.view.BaseView;
  **/
 public class FundView extends BaseView {
 
+    // X 轴方向的横线虚线 数量
+    private  int XLines = 5;
+    // X 轴的 底部要绘制的时间的数量
+    private int XTimeNum = 3;
+
     //数据源
     List<FundMode> mFundModeList;
 
@@ -252,22 +257,29 @@ public class FundView extends BaseView {
         canvas.drawText(mLoadingText, mBaseWidth / 2 - mLoadingPaint.measureText(mLoadingText) / 2, mBaseHeight / 2, mLoadingPaint);
     }
 
+    /**
+     * 绘制X轴的横线虚线
+     * @param canvas
+     */
     private void drawInnerXPaint(Canvas canvas) {
-        //画5条横轴的虚线
+        //画XLines 条横轴的虚线
         //首先确定最大值和最小值的位置
-        float perHight = (mBaseHeight - mBasePaddingBottom - mBasePaddingTop) / 4;
+        float perHight = (mBaseHeight - mBasePaddingBottom - mBasePaddingTop) / XLines;
 
         canvas.drawLine(0 + mBasePaddingLeft, mBasePaddingTop,
                 mBaseWidth - mBasePaddingRight, mBasePaddingTop, mInnerXPaint);//最上面的那一条
-
-        canvas.drawLine(0 + mBasePaddingLeft, mBasePaddingTop + perHight * 1,
+        for (int i = 1; i < XLines; i ++ ){
+            canvas.drawLine(0 + mBasePaddingLeft, mBasePaddingTop + perHight * i,
+                    mBaseWidth - mBasePaddingRight, mBasePaddingTop + perHight * i, mInnerXPaint);//2
+        }
+       /* canvas.drawLine(0 + mBasePaddingLeft, mBasePaddingTop + perHight * 1,
                 mBaseWidth - mBasePaddingRight, mBasePaddingTop + perHight * 1, mInnerXPaint);//2
 
         canvas.drawLine(0 + mBasePaddingLeft, mBasePaddingTop + perHight * 2,
                 mBaseWidth - mBasePaddingRight, mBasePaddingTop + perHight * 2, mInnerXPaint);//3
 
         canvas.drawLine(0 + mBasePaddingLeft, mBasePaddingTop + perHight * 3,
-                mBaseWidth - mBasePaddingRight, mBasePaddingTop + perHight * 3, mInnerXPaint);//4
+                mBaseWidth - mBasePaddingRight, mBasePaddingTop + perHight * 3, mInnerXPaint);//4*/
 
         canvas.drawLine(0 + mBasePaddingLeft, mBaseHeight - mBasePaddingBottom,
                 mBaseWidth - mBasePaddingRight, mBaseHeight - mBasePaddingBottom, mInnerXPaint);//最下面的那一条
@@ -291,8 +303,13 @@ public class FundView extends BaseView {
             fm.floatX = floatX2;
             fm.floatY = floatY2;
             path.lineTo(floatX2, floatY2);
+            canvas.drawCircle( floatX2,  floatY2,  2,  mBrokenPaint) ;
+
             //Log.e(TAG, "drawBrokenPaint: " + mBasePaddingLeft + mPerX * i + "-----" + (mBaseHeight - mClosePerY * (mFundModeList.get(i).dataY - mMinFundMode.dataY) - mBasePaddingBottom));
         }
+
+        canvas.drawCircle( mBasePaddingLeft,  floatY,  2,  mBrokenPaint) ;
+
 
         canvas.drawPath(path, mBrokenPaint);
 
@@ -375,11 +392,20 @@ public class FundView extends BaseView {
 
     }
 
+    /**
+     * 绘制 x 轴 底部的时间
+     * @param canvas
+     */
     //找到最大时间、最小时间和中间时间显示即可
     private void drawXPaint(Canvas canvas) {
+
+        long[] times = new long[XTimeNum];
+        String[] timeStr = new String[XTimeNum];
+
         long beginTime = mFundModeList.get(0).datetime;
-        long midTime = mFundModeList.get((mFundModeList.size() - 1) / 2).datetime;
         long endTime = mFundModeList.get(mFundModeList.size() - 1).datetime;
+        long midTime = mFundModeList.get((mFundModeList.size() - 1) / 2).datetime;
+
         String bengin = processDateTime(beginTime);
         String mid = processDateTime(midTime);
         String end = processDateTime(endTime);
@@ -401,6 +427,10 @@ public class FundView extends BaseView {
 
     }
 
+    /**
+     * 绘制 Y轴的文字
+     * @param canvas
+     */
     private void drawYPaint(Canvas canvas) {
         //现将最小值、最大值画好
         //draw min
@@ -413,10 +443,10 @@ public class FundView extends BaseView {
                 mBasePaddingLeft - txtWigth,
                 mBasePaddingTop, mXYPaint);
         //因为横线是均分的，所以只要取到最大值最小值的差值，均分即可。
-        float perYValues = (mMaxFundMode.dataY - mMinFundMode.dataY) / 4;
-        float perYWidth = (mBaseHeight - mBasePaddingBottom - mBasePaddingTop) / 4;
+        float perYValues = (mMaxFundMode.dataY - mMinFundMode.dataY) / XLines;
+        float perYWidth = (mBaseHeight - mBasePaddingBottom - mBasePaddingTop) / XLines;
         //从下到上依次画
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= XLines; i++) {
             canvas.drawText(mMinFundMode.dataY + perYValues * i + "",
                     mBasePaddingLeft - txtWigth,
                     mBaseHeight - mBasePaddingBottom - perYWidth * i, mXYPaint);

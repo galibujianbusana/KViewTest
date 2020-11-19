@@ -3,8 +3,11 @@ package com.example.kview.demo;
 
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.Log;
 
 public class InputNumLengthFilter implements InputFilter {
+
+    private static final String TAG = "InputNumLengthFilter";
 
     private int maxPoint;
     private int maxInteger;
@@ -15,21 +18,24 @@ public class InputNumLengthFilter implements InputFilter {
 
     /**
      *
-     * @param source 新输入的字符串内容
-     * @param start 新输入的字符串的开始位置
-     * @param end 新输入的字符串的结束位置
-     * @param dest  输入框原本的内容
-     * @param dstart   dstart和dend 在输入时值相同，都表示之前内容长度，但若在删除内容时，dstart表示删除后字符串的长度，dend则表示删除前的长度
-     * @param dend
+     * @param source 新输入的字符串内容      string Char
+     * @param start 新输入的字符串的开始长度  0
+     * @param end 新输入的字符串的结束位置   string.length
+     * @param dest  输入框原本的内容   eg: 569
+     * @param dstart    输入框追加信息的位置(即是光标位置)  eg: 569 -> 3
+     * @param dend      输入框追加信息的位置(即是光标位置)  eg: 569 -> 3
      * @return
      */
     @Override
     public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-        int maxLength = maxInteger + maxPoint + 1;
+
+        Log.d(TAG, "filter:  这里是追加字符串: " + source + " - - - start: " + start + " - - - end: " + end);
+        Log.d(TAG, "filter:  这里是原本字符串: " + dest.toString() + " - - - dstart: " + dstart + " - - - dend: " + dend);
+       int maxLength = maxInteger + maxPoint + 1;
         // 删除等特殊字符，直接返回
         if (nullFilter(source)) return null;
         String dValue = dest.toString();
-        if(!source.toString().matches("[0-9]")){
+        if(!source.toString().matches("[0-9.]")){
             return "";
         }
 
@@ -50,7 +56,11 @@ public class InputNumLengthFilter implements InputFilter {
                 errorIndex = dValue.length();
             }
             if (intValue.length() >= maxLength - maxPoint - 1 && dstart <= errorIndex) {
+                Log.d(TAG, "filter:  这里是判断条件: "  + (intValue.length()) + " - -- " +  (maxLength - maxPoint - 1) + "----" + ( dstart <= errorIndex) );
+                Log.d(TAG, "filter:  这里是判断条件@2: "  + (intValue.length()) + " - -- " +  maxPoint + "----" + ( dstart <= errorIndex) );
+
                 if (".".equals(source.toString())) {
+                    // 这里return null 则和return "." 效果一样。 则可以追加一个 "." 字符
                     return null;
                 }
                 return "";

@@ -1,2 +1,5 @@
+include ':test'
+include ':gsontag'
+include ':fragmentinfrag'
 include ':app'
 rootProject.name = "KView"

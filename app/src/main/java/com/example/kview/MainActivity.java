@@ -1,13 +1,22 @@
 package com.example.kview;
 
+import androidx.annotation.LongDef;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.graphics.RenderNode;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 
+import com.example.kview.demo.Strings;
 import com.example.kview.demo.ViewHelper;
 
 import java.security.interfaces.RSAPublicKey;
@@ -30,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private FundView mFundView;
     List<OriginFundMode> mOriginFundModeList;
+    int beforeLength = 0, afterLength = 0;
+    String beforeString = "", afterString = "";
+    int indexBefore = 0 ,indexAfter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +50,18 @@ public class MainActivity extends AppCompatActivity {
         initView();
         initData();
         loadData();
-        EditText edit = findViewById(R.id.edit);
-        ViewHelper.setPricePointWithInteger(edit, 4, 10);
+        Handler mHandler = new Handler(getMainLooper(), new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                return false;
+            }
+        });
+
+
 
 
     }
+
 
     private void initView() {
         mFundView = (FundView) findViewById(R.id.af_fv_fundview);
@@ -72,35 +91,35 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void loadData() {
-       /*** Disposable subscribe = Observable.timer(StringUtils.getRadomNum(500, 3000), TimeUnit.MILLISECONDS)
-                .map(map -> {
-                    String originalFundData = FundSimulateNetAPI.getOriginalFundData(getApplication());
-                    if (originalFundData == null) {
-                        Log.e(TAG, "loadData: 从网络获取到的数据为空");
-                        return null;
-                    }
-                    OriginFundMode[] originFunModes;
-                    try {
-                        originFunModes = GsonUtil.fromJson2Object(originalFundData, OriginFundMode[].class);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                    List<OriginFundMode> OriginFundModeList = Arrays.asList(originFunModes);
-                    //开始适配图表数据
-                    return adapterData(OriginFundModeList);
-                })
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        mData -> {
-                            if (StringUtils.isEmpty(mData)) {
-                                Log.d(TAG, "loadData: data is empty!");
-                                return;
-                            }
-                            mFundView.setDataList(mData);
-                        }
-                        , throwable -> throwable.printStackTrace()); ***/
+        /*** Disposable subscribe = Observable.timer(StringUtils.getRadomNum(500, 3000), TimeUnit.MILLISECONDS)
+         .map(map -> {
+         String originalFundData = FundSimulateNetAPI.getOriginalFundData(getApplication());
+         if (originalFundData == null) {
+         Log.e(TAG, "loadData: 从网络获取到的数据为空");
+         return null;
+         }
+         OriginFundMode[] originFunModes;
+         try {
+         originFunModes = GsonUtil.fromJson2Object(originalFundData, OriginFundMode[].class);
+         } catch (Exception e) {
+         e.printStackTrace();
+         return null;
+         }
+         List<OriginFundMode> OriginFundModeList = Arrays.asList(originFunModes);
+         //开始适配图表数据
+         return adapterData(OriginFundModeList);
+         })
+         .subscribeOn(Schedulers.computation())
+         .observeOn(AndroidSchedulers.mainThread())
+         .subscribe(
+         mData -> {
+         if (StringUtils.isEmpty(mData)) {
+         Log.d(TAG, "loadData: data is empty!");
+         return;
+         }
+         mFundView.setDataList(mData);
+         }
+         , throwable -> throwable.printStackTrace()); ***/
 
         //unSubscription(subscribe);
 
@@ -120,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
                 mFundView.setDataList(mData);
             }
-        },2000);
+        }, 1000);
     }
 
     private List<FundMode> adapterData(List<OriginFundMode> originFundModeList) {
