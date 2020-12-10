@@ -2,6 +2,7 @@ package trade.view.fund;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -295,7 +296,18 @@ public class FundView extends BaseView {
         float floatY = mBaseHeight - mBasePaddingBottom - mPerY * (fundMode.dataY - mMinFundMode.dataY);
         fundMode.floatX = mBasePaddingLeft;
         fundMode.floatY = floatY;
+        float preFloatX = 0 ,preFloatY = 0;
         path.moveTo(mBasePaddingLeft, floatY);
+        //
+        Path pathBg = new Path();
+        Paint paintBg = new Paint();
+
+        pathBg.reset();
+
+        pathBg.moveTo(fundMode.floatX,mBaseHeight - mBasePaddingBottom);
+        pathBg.lineTo(fundMode.floatX,fundMode.floatY);
+
+
         for (int i = 1; i < mFundModeList.size(); i++) {
             FundMode fm = mFundModeList.get(i);
             float floatX2 = mBasePaddingLeft + mPerX * i;
@@ -305,8 +317,39 @@ public class FundView extends BaseView {
             path.lineTo(floatX2, floatY2);
             canvas.drawCircle( floatX2,  floatY2,  2,  mBrokenPaint) ;
 
+            pathBg.lineTo(floatX2,floatY2);
             //Log.e(TAG, "drawBrokenPaint: " + mBasePaddingLeft + mPerX * i + "-----" + (mBaseHeight - mClosePerY * (mFundModeList.get(i).dataY - mMinFundMode.dataY) - mBasePaddingBottom));
+
+           /* if(preFloatX != 0){
+                pathBg.reset();
+                paintBg.reset();//重置
+                paintBg.setColor(getResources().getColor(R.color.colorBg));
+                paintBg.setStyle(Paint.Style.FILL);//设置空心
+                Path path1=new Path();
+                path1.moveTo(preFloatX, preFloatY);
+                path1.lineTo(preFloatX, mBaseHeight - mBasePaddingBottom);
+                path1.lineTo(floatX2, mBaseHeight - mBasePaddingBottom);
+                path1.lineTo(floatX2, floatY2);
+                path1.close();//封闭
+                canvas.drawPath(path1, paintBg);
+                preFloatX = floatX2;
+                preFloatY = floatY2;
+
+            }else{
+                preFloatX = floatX2;
+                preFloatY = floatY2;
+
+            }*/
+
         }
+
+        int size = mFundModeList.size();
+        pathBg.lineTo(mFundModeList.get(size - 1).floatX,mBaseHeight - mBasePaddingBottom);
+        paintBg.reset();
+        paintBg.setColor(getResources().getColor(R.color.colorBg));
+        paintBg.setStyle(Paint.Style.FILL);//设置空心
+        canvas.drawPath(pathBg, paintBg);
+
 
         canvas.drawCircle( mBasePaddingLeft,  floatY,  2,  mBrokenPaint) ;
 

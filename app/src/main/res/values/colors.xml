@@ -102,6 +102,7 @@
     <color name="color_minorView_kColor">#dcb1ad</color>
     <color name="color_minorView_dColor">#9941e1</color>
     <color name="color_minorView_jColor">#3785d9</color>
+    <color name="colorBg">#D1EEEE</color>
 
     <!--++++++++++++++++++++KView相关，包括：分时图、副图  结束+++++++++++++++++++++++++++++++++++++++++++++++-->
 

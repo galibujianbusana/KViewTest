@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        ShareUtil.shareContentNoUs(this,"ss");
+        ShareUtil.shareContentNoUs(this,new File(""));
 
 
     }

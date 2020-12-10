@@ -9,12 +9,13 @@ import android.content.pm.ResolveInfo;
 import android.os.Parcelable;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ShareUtil {
 
-    public static void shareContentNoUs(Context context, String text) {
+    public static void shareContentNoUs(Context context, File text) {
         Activity activity = (Activity) context;
         Intent it = new Intent(Intent.ACTION_SEND);
         it.setType("application/pdf");
@@ -34,7 +35,7 @@ public class ShareUtil {
                     continue;
                 }*/
                 targeted.putExtra(Intent.EXTRA_SUBJECT, "分享到:");
-                targeted.putExtra(Intent.EXTRA_TEXT, text);
+                targeted.putExtra(Intent.EXTRA_STREAM, text);
                 targeted.setPackage(activityInfo.packageName);
 
                 targetedShareIntents.add(targeted);
